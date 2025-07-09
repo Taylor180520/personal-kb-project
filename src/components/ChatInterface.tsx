@@ -27,7 +27,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const [selectAllSources, setSelectAllSources] = useState(true);
   const [chatHistory, setChatHistory] = useState<Array<{id: string, type: 'user' | 'assistant', content: string}>>([]);
   const [documents] = useState<Document[]>(
-    isIntroductory ? [] : [
+    isIntroductory ? [
+      { id: '1', name: 'Getting Started Guide.pdf', type: 'pdf', selected: true },
+      { id: '2', name: 'Knowledge Base Best Practices.docx', type: 'docx', selected: true },
+      { id: '3', name: 'Feature Overview.xlsx', type: 'xlsx', selected: true },
+      { id: '4', name: 'Quick Start Tutorial.mp4', type: 'video', selected: true },
+      { id: '5', name: 'FAQ and Tips.json', type: 'json', selected: true },
+    ] : [
       { id: '1', name: 'unisco_full_data_version1.json', type: 'json', selected: true },
       { id: '2', name: 'Youtube Videos List.xlsx', type: 'xlsx', selected: true },
       { id: '3', name: 'Facility List 05092025.xlsx', type: 'xlsx', selected: true },
@@ -117,6 +123,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         return '📊';
       case 'pdf':
         return '📕';
+      case 'docx':
+        return '📄';
+      case 'video':
+        return '🎥';
       default:
         return '📄';
     }
@@ -136,111 +146,65 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             Back
           </button>
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-medium text-white">
-              {isIntroductory ? 'User Guide' : 'Sources'}
-            </h2>
-            {!isIntroductory && (
-              <button className="text-gray-400 hover:text-white">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                  <path d="M8 3a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2H9v3a1 1 0 1 1-2 0V9H4a1 1 0 0 1 0-2h3V4a1 1 0 0 1 1-1z"/>
-                </svg>
-              </button>
-            )}
+            <h2 className="text-lg font-medium text-white">Sources</h2>
+            <button className="text-gray-400 hover:text-white">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 3a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2H9v3a1 1 0 1 1-2 0V9H4a1 1 0 0 1 0-2h3V4a1 1 0 0 1 1-1z"/>
+              </svg>
+            </button>
           </div>
         </div>
 
         {/* Content based on mode */}
         <div className="flex-1 flex flex-col">
-          {isIntroductory ? (
-            /* Guidance Content */
-            <div className="p-4 space-y-4">
-              <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                <h3 className="text-white font-medium mb-2 flex items-center gap-2">
-                  🎯 Quick Start
-                </h3>
-                <p className="text-gray-400 text-sm mb-3">
-                  Click on the preset questions on the right, or ask directly in the input box below
-                </p>
-                <ul className="text-gray-400 text-xs space-y-1">
-                  <li>• Learn basic knowledge base concepts</li>
-                  <li>• Master creation and management skills</li>
-                  <li>• Understand AI conversation techniques</li>
-                </ul>
-              </div>
-              
-              <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                <h3 className="text-white font-medium mb-2 flex items-center gap-2">
-                  💡 Usage Tips
-                </h3>
-                <ul className="text-gray-400 text-sm space-y-2">
-                  <li>• Questions should be specific and clear</li>
-                  <li>• You can ask follow-up questions anytime</li>
-                  <li>• Try different ways of expressing yourself</li>
-                </ul>
-              </div>
-              
-              <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                <h3 className="text-white font-medium mb-2 flex items-center gap-2">
-                  🚀 Next Steps
-                </h3>
-                <p className="text-gray-400 text-sm">
-                  After understanding the basic functions, return to the homepage to create your first personal knowledge base!
-                </p>
-              </div>
-            </div>
-          ) : (
-            /* Original Sources Content */
-            <>
-              {/* Add Button */}
-              <div className="p-4">
-                <button
-                  onClick={onAddDocuments}
-                  className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
-                >
-                  <Plus size={16} />
-                  Add
-                </button>
-              </div>
+          {/* Add Button */}
+          <div className="p-4">
+            <button
+              onClick={onAddDocuments}
+              className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
+            >
+              <Plus size={16} />
+              Add
+            </button>
+          </div>
 
-              {/* Select All Sources */}
-              <div className="px-4 pb-4">
+          {/* Select All Sources */}
+          <div className="px-4 pb-4">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={selectAllSources}
+                onChange={(e) => setSelectAllSources(e.target.checked)}
+                className="w-4 h-4 text-purple-600 bg-gray-800 border-gray-600 rounded focus:ring-purple-600 focus:ring-2"
+              />
+              <span className="text-white font-medium">Select all sources</span>
+            </label>
+          </div>
+
+          {/* Document List */}
+          <div className="flex-1 overflow-y-auto">
+            {documents.map((doc) => (
+              <div key={doc.id} className="px-4 py-3 border-b border-gray-800 hover:bg-gray-800/50 transition-colors">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={selectAllSources}
-                    onChange={(e) => setSelectAllSources(e.target.checked)}
+                    checked={doc.selected}
+                    onChange={() => {}}
                     className="w-4 h-4 text-purple-600 bg-gray-800 border-gray-600 rounded focus:ring-purple-600 focus:ring-2"
                   />
-                  <span className="text-white font-medium">Select all sources</span>
+                  <div className="flex items-center gap-2 flex-1">
+                    <span className="text-lg">{getFileIcon(doc.type)}</span>
+                    <span className="text-white text-sm">{doc.name}</span>
+                  </div>
+                  <button className="text-gray-400 hover:text-white">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                    </svg>
+                  </button>
                 </label>
               </div>
-
-              {/* Document List */}
-              <div className="flex-1 overflow-y-auto">
-                {documents.map((doc) => (
-                  <div key={doc.id} className="px-4 py-3 border-b border-gray-800 hover:bg-gray-800/50 transition-colors">
-                    <label className="flex items-center gap-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={doc.selected}
-                        onChange={() => {}}
-                        className="w-4 h-4 text-purple-600 bg-gray-800 border-gray-600 rounded focus:ring-purple-600 focus:ring-2"
-                      />
-                      <div className="flex items-center gap-2 flex-1">
-                        <span className="text-lg">{getFileIcon(doc.type)}</span>
-                        <span className="text-white text-sm">{doc.name}</span>
-                      </div>
-                      <button className="text-gray-400 hover:text-white">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                          <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                        </svg>
-                      </button>
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
+            ))}
+          </div>
         </div>
       </div>
 
@@ -325,16 +289,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 style={{ minHeight: '48px' }}
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
-                {!isIntroductory && (
-                  <button className="text-gray-400 hover:text-white transition-colors">
-                    <Paperclip size={20} />
-                  </button>
-                )}
-                {!isIntroductory && (
-                  <div className="flex items-center gap-1 px-3 py-1 bg-gray-700 rounded text-sm text-gray-300 font-medium">
-                    <span>{documents.filter(d => d.selected).length} sources</span>
-                  </div>
-                )}
+                <button className="text-gray-400 hover:text-white transition-colors">
+                  <Paperclip size={20} />
+                </button>
+                <div className="flex items-center gap-1 px-3 py-1 bg-gray-700 rounded text-sm text-gray-300 font-medium">
+                  <span>{documents.filter(d => d.selected).length} sources</span>
+                </div>
                 <button
                   onClick={handleSendMessage}
                   className="p-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
