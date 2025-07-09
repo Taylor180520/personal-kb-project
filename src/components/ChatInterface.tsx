@@ -44,9 +44,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
   const introductoryQuestions = [
     "What is My Knowledge Space?",
-    "How do I create and manage my knowledge base?",
+    "How do I create and manage my knowledge books?",
     "What's the difference between My Knowledge Space and Enterprise Knowledge?",
-    "How do I upload documents to my knowledge base?",
+    "How do I upload documents?",
     "What are role groups?",
     "How do I share my knowledge books?"
   ];
