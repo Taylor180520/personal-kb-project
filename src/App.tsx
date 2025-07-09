@@ -213,7 +213,7 @@ function App() {
                 className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
               >
                 <Plus size={20} />
-                Create Central KB
+                Create
               </button>
             </div>
             
