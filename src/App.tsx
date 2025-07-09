@@ -30,7 +30,7 @@ function App() {
   const [deletingKB, setDeletingKB] = useState<KnowledgeBase | null>(null);
   const [currentKBName, setCurrentKBName] = useState('');
   const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([
-    { id: '0', title: '🚀 新手指南：探索你的个人智能知识库', emoji: '🎯', status: 'Public', isCentral: false },
+    { id: '0', title: 'Getting Started with Your KB', emoji: '🎯', status: 'Public', isCentral: false },
     { id: '1', title: 'UNISCO Private', emoji: '📄', status: 'Public', isCentral: true },
     { id: '2', title: 'UNIS Internal', emoji: '🏢', status: 'Public', isCentral: true },
     { id: '3', title: 'Chatbot KB', emoji: '👥', status: 'Public', isCentral: true },
