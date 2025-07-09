@@ -191,7 +191,7 @@ function App() {
         <div className="mb-8">
           <h1 className="text-3xl font-medium text-white mb-2">My Knowledge Space</h1>
           <p className="text-gray-300 text-base mb-6">
-            This is your self‑managed knowledge space—completely under your control. Effortlessly organize your notes, ideas, and insights, and share individual articles or entire topic collections with teammates or designated role groups anytime—seamlessly connecting to your enterprise knowledge ecosystem.
+            This is your self‑managed knowledge space—completely under your control. Effortlessly organize your notes, ideas, and insights, and share individual articles or entire topic collections with teammates or designated role groups anytime
           </p>
           
           {/* Search and Filter Bar */}
