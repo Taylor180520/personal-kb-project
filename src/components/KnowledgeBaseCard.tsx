@@ -107,7 +107,11 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
             {roleTags.map((tag, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-purple-900/40 text-purple-300 text-xs rounded font-medium border border-purple-700/30"
+                className={`px-2 py-1 text-xs rounded font-medium border ${
+                  tag === 'system' 
+                    ? 'bg-blue-900/40 text-blue-300 border-blue-700/30' 
+                    : 'bg-purple-900/40 text-purple-300 border-purple-700/30'
+                }`}
               >
                 {tag}
               </span>
