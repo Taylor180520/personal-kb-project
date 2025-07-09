@@ -30,6 +30,7 @@ function App() {
   const [deletingKB, setDeletingKB] = useState<KnowledgeBase | null>(null);
   const [currentKBName, setCurrentKBName] = useState('');
   const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([
+    { id: '0', title: '🚀 新手指南：探索你的个人智能知识库', emoji: '🎯', status: 'Public', isCentral: false },
     { id: '1', title: 'UNISCO Private', emoji: '📄', status: 'Public', isCentral: true },
     { id: '2', title: 'UNIS Internal', emoji: '🏢', status: 'Public', isCentral: true },
     { id: '3', title: 'Chatbot KB', emoji: '👥', status: 'Public', isCentral: true },
@@ -162,6 +163,7 @@ function App() {
           knowledgeBaseEmoji={currentKB.emoji}
           onBack={handleBackToHome}
           onAddDocuments={handleGoToUpload}
+          isIntroductory={currentKB.id === '0'}
         />
         
         {/* Add Sources Modal - Available globally */}
@@ -201,7 +203,7 @@ function App() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
                   type="text"
-                  placeholder="Search knowledge books..."
+                  placeholder="Search my knowledge vault..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-80 pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-600 focus:outline-none"
@@ -219,7 +221,7 @@ function App() {
             
             <div className="flex items-center justify-between">
               <button className="px-4 py-2 text-purple-400 hover:text-purple-300 transition-colors border-b border-purple-600">
-                Knowledge Books
+                我的知识宝库
               </button>
             </div>
           </div>
