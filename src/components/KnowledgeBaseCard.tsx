@@ -100,25 +100,23 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
       
       <h3 className="text-white font-medium text-lg mb-2">{title}</h3>
       
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-        <div className={`w-2 h-2 rounded-full ${
-          isCentral ? 'bg-purple-400' : status === 'Public' ? 'bg-green-400' : 'bg-gray-400'
-        }`}></div>
-        <span className="text-gray-400 text-sm">{isCentral ? 'Central' : status}</span>
-        </div>
-        
-        {/* Role Tags */}
-        {roleTags.length > 0 && (
+      {/* Role Tags - Replace status indicators */}
+      <div className="flex items-center justify-start">
+        {roleTags.length > 0 ? (
           <div className="flex flex-wrap gap-1">
             {roleTags.map((tag, index) => (
               <span
                 key={index}
-                className="px-2 py-1 bg-purple-900/40 text-purple-300 text-xs rounded-md font-medium border border-purple-700/30"
+                className="px-2 py-1 bg-purple-900/40 text-purple-300 text-xs rounded font-medium border border-purple-700/30"
               >
                 {tag}
               </span>
             ))}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-gray-500"></div>
+            <span className="text-gray-500 text-xs">Private</span>
           </div>
         )}
       </div>
