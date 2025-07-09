@@ -1,44 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MoreHorizontal, Edit, Trash2, Users, Lock, Globe } from 'lucide-react';
-
-interface RoleGroup {
-  id: string;
-  name: string;
-  role: 'Owner' | 'Editor' | 'Viewer';
-  memberCount: number;
-}
-
-interface UserPermission {
-  id: string;
-  email: string;
-  name: string;
-  role: 'Owner' | 'Editor' | 'Viewer';
-  avatar?: string;
-  company?: string;
-  isVerified?: boolean;
-}
-
-interface KnowledgeBasePermissions {
-  isPublic: boolean;
-  roleGroups: RoleGroup[];
-  individualUsers: UserPermission[];
-  allowPublicAccess: boolean;
-  requireApproval: boolean;
-}
-
-interface PermissionSummary {
-  type: string;
-  count: number;
-  color: string;
-}
+import { MoreHorizontal, Edit, Trash2 } from 'lucide-react';
 
 interface KnowledgeBaseCardProps {
   id: string;
   title: string;
   emoji: string;
   status: 'Public' | 'Private';
-  permissions: KnowledgeBasePermissions;
-  permissionSummary: PermissionSummary;
+  isCentral?: boolean;
   onClick?: () => void;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
@@ -49,8 +17,7 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
   title,
   emoji,
   status,
-  permissions,
-  permissionSummary,
+  isCentral = false,
   onClick,
   onEdit,
   onDelete
@@ -86,35 +53,6 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
     onDelete?.(id);
   };
 
-  // Check if current user has edit permissions
-  const hasEditPermissions = permissions.individualUsers.some(user => 
-    user.role === 'Owner' || user.role === 'Editor'
-  ) || permissions.roleGroups.some(group => 
-    group.role === 'Owner' || group.role === 'Editor'
-  ) || permissions.isPublic;
-
-  // Get permission icon
-  const getPermissionIcon = () => {
-    if (permissions.isPublic && permissions.allowPublicAccess) {
-      return <Globe size={14} className="text-green-400" />;
-    } else if (permissionSummary.count > 0) {
-      return <Users size={14} className="text-blue-400" />;
-    } else {
-      return <Lock size={14} className="text-gray-400" />;
-    }
-  };
-
-  // Get permission display text
-  const getPermissionText = () => {
-    if (permissions.isPublic && permissions.allowPublicAccess) {
-      return 'Public';
-    } else if (permissionSummary.count > 0) {
-      return `Shared (${permissionSummary.count})`;
-    } else {
-      return 'Private';
-    }
-  };
-
   return (
     <div 
       className="bg-gray-800/50 rounded-xl p-4 border border-gray-700 hover:border-purple-600 transition-all duration-200 cursor-pointer relative group"
@@ -122,7 +60,7 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
     >
       <div className="flex justify-between items-start mb-4">
         <div className="text-2xl">{emoji}</div>
-        {hasEditPermissions && (
+        {isCentral && (
           <div className="relative" ref={dropdownRef}>
             <button 
               onClick={handleMoreClick}
@@ -151,7 +89,7 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
             )}
           </div>
         )}
-        {!hasEditPermissions && (
+        {!isCentral && (
           <button className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-white">
             <MoreHorizontal size={20} />
           </button>
@@ -160,29 +98,12 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
       
       <h3 className="text-white font-medium text-lg mb-2">{title}</h3>
       
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${permissionSummary.color}`}></div>
-          <span className="text-gray-400 text-sm">{getPermissionText()}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          {getPermissionIcon()}
-        </div>
+      <div className="flex items-center gap-2">
+        <div className={`w-2 h-2 rounded-full ${
+          isCentral ? 'bg-purple-400' : status === 'Public' ? 'bg-green-400' : 'bg-gray-400'
+        }`}></div>
+        <span className="text-gray-400 text-sm">{isCentral ? 'Central' : status}</span>
       </div>
-      
-      {/* Additional permission details on hover */}
-      {(permissions.roleGroups.length > 0 || permissions.individualUsers.length > 0) && (
-        <div className="mt-2 pt-2 border-t border-gray-700/50 opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="text-xs text-gray-500 space-y-1">
-            {permissions.roleGroups.length > 0 && (
-              <div>Role Groups: {permissions.roleGroups.length}</div>
-            )}
-            {permissions.individualUsers.length > 0 && (
-              <div>Users: {permissions.individualUsers.length}</div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
