@@ -227,7 +227,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     Welcome to the Beginner's Guide!
                   </p>
                   <p className="text-gray-400 text-base max-w-lg mx-auto mb-8">
-                    I'm your personal guide, helping you quickly understand the powerful features of personal knowledge bases. Click on the questions below to start exploring, or directly enter your questions!
+                    I'm your personal guide, helping you quickly understand the powerful features of knowledge base. Click on the questions below to start exploring, or directly enter your questions!
                   </p>
                   
                   {/* Predefined Questions */}
