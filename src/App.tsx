@@ -31,7 +31,7 @@ function App() {
   const [deletingKB, setDeletingKB] = useState<KnowledgeBase | null>(null);
   const [currentKBName, setCurrentKBName] = useState('');
   const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([
-    { id: '0', title: 'Getting Started with Your KB', emoji: '🎯', status: 'Public', isCentral: false, roleTags: ['UNIS/Marketing'] },
+    { id: '0', title: 'Getting Started with Your KB', emoji: '🎯', status: 'Public', isCentral: false, roleTags: ['system'] },
     { id: '1', title: 'Personal Documents', emoji: '📄', status: 'Public', isCentral: true, roleTags: ['UNIS/Engineering/Manager'] },
     { id: '2', title: 'Work Projects', emoji: '🏢', status: 'Public', isCentral: true, roleTags: ['UNIS/Sales/Lead', 'UNIS/Marketing'] },
     { id: '3', title: 'Chatbot Resources', emoji: '👥', status: 'Public', isCentral: true, roleTags: ['UNIS/Engineering/Developer'] },
