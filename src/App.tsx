@@ -15,6 +15,7 @@ interface KnowledgeBase {
   emoji: string;
   status: 'Public' | 'Private';
   isCentral: boolean;
+  roleTags?: string[];
 }
 
 function App() {
@@ -30,21 +31,21 @@ function App() {
   const [deletingKB, setDeletingKB] = useState<KnowledgeBase | null>(null);
   const [currentKBName, setCurrentKBName] = useState('');
   const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([
-    { id: '0', title: 'Getting Started with Your KB', emoji: '🎯', status: 'Public', isCentral: false },
-    { id: '1', title: 'Personal Documents', emoji: '📄', status: 'Public', isCentral: true },
-    { id: '2', title: 'Work Projects', emoji: '🏢', status: 'Public', isCentral: true },
-    { id: '3', title: 'Chatbot Resources', emoji: '👥', status: 'Public', isCentral: true },
-    { id: '4', title: 'Tech Notes', emoji: '🏭', status: 'Public', isCentral: true },
-    { id: '5', title: 'Computer Guides', emoji: '📋', status: 'Public', isCentral: true },
-    { id: '6', title: 'Financial Records', emoji: '📊', status: 'Public', isCentral: false },
+    { id: '0', title: 'Getting Started with Your KB', emoji: '🎯', status: 'Public', isCentral: false, roleTags: ['UNIS/Marketing'] },
+    { id: '1', title: 'Personal Documents', emoji: '📄', status: 'Public', isCentral: true, roleTags: ['UNIS/Engineering/Manager'] },
+    { id: '2', title: 'Work Projects', emoji: '🏢', status: 'Public', isCentral: true, roleTags: ['UNIS/Sales/Lead', 'UNIS/Marketing'] },
+    { id: '3', title: 'Chatbot Resources', emoji: '👥', status: 'Public', isCentral: true, roleTags: ['UNIS/Engineering/Developer'] },
+    { id: '4', title: 'Tech Notes', emoji: '🏭', status: 'Public', isCentral: true, roleTags: ['UNIS/IT/Admin', 'UNIS/Engineering/Manager'] },
+    { id: '5', title: 'Computer Guides', emoji: '📋', status: 'Public', isCentral: true, roleTags: ['UNIS/Support/Specialist'] },
+    { id: '6', title: 'Financial Records', emoji: '📊', status: 'Public', isCentral: false, roleTags: ['UNIS/Finance/Analyst'] },
     { id: '7', title: 'Travel Plans', emoji: '🚚', status: 'Public', isCentral: false },
-    { id: '8', title: 'Product Descriptions', emoji: '📋', status: 'Public', isCentral: false },
+    { id: '8', title: 'Product Descriptions', emoji: '📋', status: 'Public', isCentral: false, roleTags: ['UNIS/Product/Manager'] },
     { id: '9', title: 'Work Procedures', emoji: '📝', status: 'Public', isCentral: false },
-    { id: '10', title: 'Shipping Info', emoji: '📦', status: 'Private', isCentral: false },
+    { id: '10', title: 'Shipping Info', emoji: '📦', status: 'Private', isCentral: false, roleTags: ['UNIS/Operations/Lead'] },
     { id: '11', title: 'Tech Support', emoji: '💻', status: 'Public', isCentral: false },
-    { id: '12', title: 'Home Organization', emoji: '🏗️', status: 'Public', isCentral: false },
+    { id: '12', title: 'Home Organization', emoji: '🏗️', status: 'Public', isCentral: false, roleTags: ['UNIS/Facilities/Manager'] },
     { id: '13', title: 'Team Contacts', emoji: '👥', status: 'Public', isCentral: false },
-    { id: '14', title: 'Package Tracking', emoji: '📦', status: 'Public', isCentral: false },
+    { id: '14', title: 'Package Tracking', emoji: '📦', status: 'Public', isCentral: false, roleTags: ['UNIS/Logistics/Coordinator'] },
     { id: '15', title: 'Commute Options', emoji: '🚚', status: 'Public', isCentral: false },
   ]);
 
@@ -237,6 +238,7 @@ function App() {
               emoji={kb.emoji}
               status={kb.status}
               isCentral={kb.isCentral}
+              roleTags={kb.roleTags}
               onClick={() => handleKBClick(kb)}
               onEdit={handleEditKB}
               onDelete={handleDeleteKB}
