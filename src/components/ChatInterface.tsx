@@ -274,7 +274,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                         onClick={() => handleQuestionClick(question)}
                         className="p-4 bg-gray-800/50 hover:bg-gray-700/50 border border-gray-600 hover:border-purple-500 rounded-lg text-left text-white transition-all duration-200 group"
                       >
-                        <div className="text-sm text-purple-400 mb-1">💡 Common Questions</div>
+                        
                         <div className="text-base group-hover:text-purple-300 transition-colors">{question}</div>
                       </button>
                     ))}
