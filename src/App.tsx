@@ -5,7 +5,9 @@ import CreateCentralKBModal from './components/CreateCentralKBModal';
 import EditCentralKBModal from './components/EditCentralKBModal';
 import DeleteConfirmModal from './components/DeleteConfirmModal';
 import UploadDocumentsPage from './components/UploadDocumentsPage';
+import AddSourcesModal from './components/AddSourcesModal';
 import ChatInterface from './components/ChatInterface';
+import TopNotification from './components/TopNotification';
 
 interface KnowledgeBase {
   id: string;
@@ -20,27 +22,30 @@ function App() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isAddSourcesModalOpen, setIsAddSourcesModalOpen] = useState(false);
+  const [showUploadNotification, setShowUploadNotification] = useState(false);
   const [currentPage, setCurrentPage] = useState<'home' | 'chat' | 'upload'>('home');
   const [currentKB, setCurrentKB] = useState<KnowledgeBase | null>(null);
   const [editingKB, setEditingKB] = useState<KnowledgeBase | null>(null);
   const [deletingKB, setDeletingKB] = useState<KnowledgeBase | null>(null);
   const [currentKBName, setCurrentKBName] = useState('');
   const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([
-    { id: '1', title: 'UNISCO Private', emoji: '📄', status: 'Public', isCentral: true },
-    { id: '2', title: 'UNIS Internal', emoji: '🏢', status: 'Public', isCentral: true },
-    { id: '3', title: 'Chatbot KB', emoji: '👥', status: 'Public', isCentral: true },
-    { id: '4', title: 'Samsung Technical', emoji: '🏭', status: 'Public', isCentral: true },
-    { id: '5', title: 'Lenovo Internal', emoji: '📋', status: 'Public', isCentral: true },
-    { id: '6', title: 'UNIS Accounting', emoji: '📊', status: 'Public', isCentral: false },
-    { id: '7', title: 'UNIS Transportation', emoji: '🚚', status: 'Public', isCentral: false },
-    { id: '8', title: 'ITEM Drop Description', emoji: '📋', status: 'Public', isCentral: false },
-    { id: '9', title: 'UNIS Employee Duties and Workflows', emoji: '📝', status: 'Public', isCentral: false },
-    { id: '10', title: 'Industry CubeShip', emoji: '📦', status: 'Private', isCentral: false },
-    { id: '11', title: 'Industry IT', emoji: '💻', status: 'Public', isCentral: false },
-    { id: '12', title: 'Industry Yard Management', emoji: '🏗️', status: 'Public', isCentral: false },
-    { id: '13', title: 'Industry HR', emoji: '👥', status: 'Public', isCentral: false },
-    { id: '14', title: 'Industry LSO', emoji: '📦', status: 'Public', isCentral: false },
-    { id: '15', title: 'Industry Transportation', emoji: '🚚', status: 'Public', isCentral: false },
+    { id: '0', title: 'Getting Started with Your KB', emoji: '🎯', status: 'Public', isCentral: false },
+    { id: '1', title: 'Personal Documents', emoji: '📄', status: 'Public', isCentral: true },
+    { id: '2', title: 'Work Projects', emoji: '🏢', status: 'Public', isCentral: true },
+    { id: '3', title: 'Chatbot Resources', emoji: '👥', status: 'Public', isCentral: true },
+    { id: '4', title: 'Tech Notes', emoji: '🏭', status: 'Public', isCentral: true },
+    { id: '5', title: 'Computer Guides', emoji: '📋', status: 'Public', isCentral: true },
+    { id: '6', title: 'Financial Records', emoji: '📊', status: 'Public', isCentral: false },
+    { id: '7', title: 'Travel Plans', emoji: '🚚', status: 'Public', isCentral: false },
+    { id: '8', title: 'Product Descriptions', emoji: '📋', status: 'Public', isCentral: false },
+    { id: '9', title: 'Work Procedures', emoji: '📝', status: 'Public', isCentral: false },
+    { id: '10', title: 'Shipping Info', emoji: '📦', status: 'Private', isCentral: false },
+    { id: '11', title: 'Tech Support', emoji: '💻', status: 'Public', isCentral: false },
+    { id: '12', title: 'Home Organization', emoji: '🏗️', status: 'Public', isCentral: false },
+    { id: '13', title: 'Team Contacts', emoji: '👥', status: 'Public', isCentral: false },
+    { id: '14', title: 'Package Tracking', emoji: '📦', status: 'Public', isCentral: false },
+    { id: '15', title: 'Commute Options', emoji: '🚚', status: 'Public', isCentral: false },
   ]);
 
   const filteredKnowledgeBases = knowledgeBases.filter(kb =>
@@ -57,7 +62,7 @@ function App() {
     };
     setKnowledgeBases(prev => [newKB, ...prev]);
     setCurrentKB(newKB);
-    setCurrentPage('upload');
+    setIsAddSourcesModalOpen(true);
     setIsCreateModalOpen(false);
   };
 
@@ -72,7 +77,11 @@ function App() {
   };
 
   const handleGoToUpload = () => {
-    setCurrentPage('upload');
+    if (currentKB?.isCentral) {
+      setIsAddSourcesModalOpen(true);
+    } else {
+      setCurrentPage('upload');
+    }
   };
 
   const handleEditKB = (id: string) => {
@@ -113,25 +122,66 @@ function App() {
     }
   };
 
+  const handleUploadConfirm = () => {
+    setShowUploadNotification(true);
+  };
+
   // Render Upload Documents Page
   if (currentPage === 'upload' && currentKB) {
     return (
-      <UploadDocumentsPage
-        knowledgeBaseName={currentKB.title}
-        onClose={handleBackToHome}
-      />
+      <>
+        <UploadDocumentsPage
+          knowledgeBaseName={currentKB.title}
+          onClose={handleBackToHome}
+        />
+        
+        {/* Add Sources Modal - Available globally */}
+        <AddSourcesModal
+          isOpen={isAddSourcesModalOpen}
+          knowledgeBaseName={currentKB?.title || ''}
+          knowledgeBaseEmoji={currentKB?.emoji || '📂'}
+          onClose={() => setIsAddSourcesModalOpen(false)}
+          onConfirm={handleUploadConfirm}
+        />
+
+        {/* Top Notification */}
+        <TopNotification
+          message="Upload received"
+          isVisible={showUploadNotification}
+          onHide={() => setShowUploadNotification(false)}
+        />
+      </>
     );
   }
 
   // Render Chat Interface
   if (currentPage === 'chat' && currentKB) {
     return (
-      <ChatInterface
-        knowledgeBaseName={currentKB.title}
-        knowledgeBaseEmoji={currentKB.emoji}
-        onBack={handleBackToHome}
-        onAddDocuments={handleGoToUpload}
-      />
+      <>
+        <ChatInterface
+          knowledgeBaseName={currentKB.title}
+          knowledgeBaseEmoji={currentKB.emoji}
+          onBack={handleBackToHome}
+          onAddDocuments={handleGoToUpload}
+          isIntroductory={currentKB.id === '0'}
+        />
+        
+        {/* Add Sources Modal - Available globally */}
+        <AddSourcesModal
+          isOpen={isAddSourcesModalOpen}
+          knowledgeBaseName={currentKB?.title || ''}
+          knowledgeBaseEmoji={currentKB?.emoji || '📂'}
+          onClose={() => setIsAddSourcesModalOpen(false)}
+          onConfirm={handleUploadConfirm}
+        />
+
+        {/* Top Notification */}
+        <TopNotification
+          message="Upload received"
+          isVisible={showUploadNotification}
+          onHide={() => setShowUploadNotification(false)}
+        />
+      </>
     );
   }
 
@@ -141,9 +191,9 @@ function App() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-medium text-white mb-2">Knowledge Management</h1>
+          <h1 className="text-3xl font-medium text-white mb-2">My Knowledge Space</h1>
           <p className="text-gray-300 text-base mb-6">
-            Create, manage, and share your organization's knowledge with powerful documentation tools and seamless integration capabilities.
+            This is your self‑managed knowledge space—completely under your control. Effortlessly organize your notes, ideas, and insights, and share individual articles or entire topic collections with teammates or designated role groups anytime
           </p>
           
           {/* Search and Filter Bar */}
@@ -153,7 +203,7 @@ function App() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
                   type="text"
-                  placeholder="Search knowledge base..."
+                  placeholder="Search my knowledge vault..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-80 pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-purple-600 focus:outline-none"
@@ -165,13 +215,13 @@ function App() {
                 className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
               >
                 <Plus size={20} />
-                Create Central KB
+                Create
               </button>
             </div>
             
             <div className="flex items-center justify-between">
               <button className="px-4 py-2 text-purple-400 hover:text-purple-300 transition-colors border-b border-purple-600">
-                All Knowledge Bases
+                Knowledge Books
               </button>
             </div>
           </div>
@@ -231,6 +281,22 @@ function App() {
         }}
         onConfirm={handleDeleteConfirm}
         knowledgeBaseName={deletingKB?.title || ''}
+      />
+
+      {/* Add Sources Modal - Available globally */}
+      <AddSourcesModal
+        isOpen={isAddSourcesModalOpen}
+        knowledgeBaseName={currentKB?.title || ''}
+        knowledgeBaseEmoji={currentKB?.emoji || '📂'}
+        onClose={() => setIsAddSourcesModalOpen(false)}
+        onConfirm={handleUploadConfirm}
+      />
+
+      {/* Top Notification */}
+      <TopNotification
+        message="Upload received"
+        isVisible={showUploadNotification}
+        onHide={() => setShowUploadNotification(false)}
       />
     </div>
   );
