@@ -43,12 +43,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   );
 
   const introductoryQuestions = [
-    "What is a personal knowledge base? What are its advantages?",
+    "What is My Knowledge Space?",
     "How do I create and manage my knowledge base?",
-    "What's the difference between personal and enterprise knowledge bases?",
+    "What's the difference between My Knowledge Space and Enterprise Knowledge?",
     "How do I upload documents to my knowledge base?",
-    "How can I have effective conversations with the AI assistant?",
-    "How do I share content from my knowledge base?"
+    "What are role groups?",
+    "How do I share my knowledge books?"
   ];
 
   const handleSendMessage = () => {
