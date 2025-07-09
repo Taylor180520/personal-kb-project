@@ -189,7 +189,7 @@ function App() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-medium text-white mb-2">Knowledge Management</h1>
+          <h1 className="text-3xl font-medium text-white mb-2">My Knowledge Space</h1>
           <p className="text-gray-300 text-base mb-6">
             Create, manage, and share your organization's knowledge with powerful documentation tools and seamless integration capabilities.
           </p>
