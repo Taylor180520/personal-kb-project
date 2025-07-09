@@ -221,7 +221,7 @@ function App() {
             
             <div className="flex items-center justify-between">
               <button className="px-4 py-2 text-purple-400 hover:text-purple-300 transition-colors border-b border-purple-600">
-                我的知识宝库
+                Knowledge Books
               </button>
             </div>
           </div>
