@@ -40,6 +40,8 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
   const [inputValue, setInputValue] = useState('');
   const [validationError, setValidationError] = useState('');
   const modalRef = useRef<HTMLDivElement>(null);
+  const inviteInputRef = useRef<HTMLInputElement>(null);
+  const permissionSelectorRef = useRef<HTMLDivElement>(null);
 
   // Mock data - 在实际项目中这将从API获取
   const [users, setUsers] = useState<User[]>([
@@ -134,6 +136,33 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose]);
+
+  // 当进入 Invite 模式时，自动聚焦到输入框
+  useEffect(() => {
+    if (isInviteMode) {
+      // 等待渲染完成后聚焦
+      setTimeout(() => {
+        if (inviteInputRef.current) {
+          const element = inviteInputRef.current;
+          element.focus();
+          const length = element.value.length;
+          try {
+            element.setSelectionRange(length, length);
+          } catch {}
+        }
+      }, 0);
+    }
+  }, [isInviteMode]);
+
+  const focusInviteInputToEnd = () => {
+    const element = inviteInputRef.current;
+    if (!element) return;
+    element.focus();
+    const length = element.value.length;
+    try {
+      element.setSelectionRange(length, length);
+    } catch {}
+  };
 
   const handlePermissionChange = (userId: string, newPermission: PermissionOption) => {
     if (newPermission === 'Revoke') {
@@ -316,10 +345,12 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
     
     setInputValue('');
     setValidationError('');
+    setTimeout(focusInviteInputToEnd, 0);
   };
 
   const removeInviteTag = (tagId: string) => {
     setInviteTags(prev => prev.filter(tag => tag.id !== tagId));
+    setTimeout(focusInviteInputToEnd, 0);
   };
 
   const addSuggestedToTags = (item: User | RoleGroup) => {
@@ -341,6 +372,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
       };
       setInviteTags(prev => [...prev, newTag]);
     }
+    setTimeout(focusInviteInputToEnd, 0);
   };
 
   const handleInviteSubmit = () => {
@@ -493,8 +525,14 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
           <div className="p-6 space-y-6">
             {/* Search Input with Tags and Invite Button */}
             <div className="flex gap-3 items-start">
-              <div className="flex-1 relative">
-                <div className="min-h-[60px] bg-white dark:bg-gray-700 border-2 border-blue-400 rounded-lg focus-within:border-blue-500">
+              <div className="flex-1 relative" onMouseDown={(e) => {
+                // 点击整个标签区域时，聚焦到输入框末尾；但排除权限选择器区域
+                const target = e.target as Node;
+                if (permissionSelectorRef.current && permissionSelectorRef.current.contains(target)) return;
+                e.preventDefault();
+                focusInviteInputToEnd();
+              }}>
+                <div className="min-h-[60px] bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
                   {/* Main container with permission selector on top right */}
                   <div className="flex items-start justify-between p-3 gap-2">
                     {/* Left side: Tags and Input */}
@@ -534,11 +572,12 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                         }}
                         onKeyDown={handleInputKeyDown}
                         className="w-full py-1 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none text-sm"
+                        ref={inviteInputRef}
                       />
                     </div>
                     
                     {/* Right side: Permission Selector (always in top-right) */}
-                    <div className="relative flex-shrink-0 self-start">
+                    <div className="relative flex-shrink-0 self-start" ref={permissionSelectorRef} onMouseDown={(e) => e.stopPropagation()}>
                       <select
                         value={invitePermission}
                         onChange={(e) => setInvitePermission(e.target.value as typeof invitePermission)}
@@ -606,8 +645,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
               {/* Invite Button - on the right side of search */}
               <button 
                 onClick={handleInviteSubmit}
-                disabled={inviteTags.length === 0}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors text-sm flex-shrink-0"
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors text-sm flex-shrink-0"
               >
                 Invite
               </button>
