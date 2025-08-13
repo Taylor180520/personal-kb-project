@@ -298,19 +298,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
     return inExisting || inSuggested;
   };
 
-  const validateInviteInput = (value: string) => {
-    const trimmed = value.trim();
-    if (!trimmed) {
-      setValidationError('');
-      return;
-    }
-    if (trimmed.includes('@')) {
-      setValidationError(isValidEmail(trimmed) ? '' : '这不是个有效邮箱');
-      return;
-    }
-    // not an email -> must be a valid role group name
-    setValidationError(isValidRoleGroupName(trimmed) ? '' : '这不是个有效邮箱');
-  };
+  // Note: validation is triggered only on Enter (submit), not on every keystroke
 
   const handleInviteClick = () => {
     setIsInviteMode(true);
@@ -336,7 +324,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
       // Block adding invalid entries
       const trimmed = inputValue.trim();
       if ((trimmed.includes('@') && !isValidEmail(trimmed)) || (!trimmed.includes('@') && !isValidRoleGroupName(trimmed))) {
-        setValidationError('这不是个有效邮箱');
+        setValidationError('This is not a valid email');
         return;
       }
       addTagFromInput();
@@ -350,7 +338,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
     // Check if it looks like an email
     if (trimmedValue.includes('@')) {
       if (!isValidEmail(trimmedValue)) {
-        setValidationError('这不是个有效邮箱');
+        setValidationError('This is not a valid email');
         return;
       }
       // Add as user with email
@@ -364,7 +352,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
     } else {
       // Not an email -> must be valid role group name
       if (!isValidRoleGroupName(trimmedValue)) {
-        setValidationError('这不是个有效邮箱');
+        setValidationError('This is not a valid email');
         return;
       }
       const matchedGroup = [...roleGroups, ...suggestedGroups].find(g => g.name.toLowerCase() === trimmedValue.toLowerCase());
@@ -601,7 +589,8 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                         onChange={(e) => {
                           setInputValue(e.target.value);
                           setSearchQuery(e.target.value);
-                          validateInviteInput(e.target.value);
+                          // clear error while user is typing; validate on Enter only
+                          if (validationError) setValidationError('');
                         }}
                         onKeyDown={handleInputKeyDown}
                         className="w-full py-1 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none text-sm"
