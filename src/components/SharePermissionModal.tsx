@@ -290,6 +290,28 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
     return emailRegex.test(email);
   };
 
+  // Role group name validation - matches existing or suggested role groups
+  const isValidRoleGroupName = (name: string) => {
+    const lower = name.toLowerCase();
+    const inExisting = roleGroups.some(g => g.name.toLowerCase() === lower);
+    const inSuggested = suggestedGroups.some(g => g.name.toLowerCase() === lower);
+    return inExisting || inSuggested;
+  };
+
+  const validateInviteInput = (value: string) => {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      setValidationError('');
+      return;
+    }
+    if (trimmed.includes('@')) {
+      setValidationError(isValidEmail(trimmed) ? '' : '这不是个有效邮箱');
+      return;
+    }
+    // not an email -> must be a valid role group name
+    setValidationError(isValidRoleGroupName(trimmed) ? '' : '这不是个有效邮箱');
+  };
+
   const handleInviteClick = () => {
     setIsInviteMode(true);
     setSearchQuery('');
@@ -311,6 +333,12 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
   const handleInputKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && inputValue.trim()) {
       e.preventDefault();
+      // Block adding invalid entries
+      const trimmed = inputValue.trim();
+      if ((trimmed.includes('@') && !isValidEmail(trimmed)) || (!trimmed.includes('@') && !isValidRoleGroupName(trimmed))) {
+        setValidationError('这不是个有效邮箱');
+        return;
+      }
       addTagFromInput();
     }
   };
@@ -322,7 +350,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
     // Check if it looks like an email
     if (trimmedValue.includes('@')) {
       if (!isValidEmail(trimmedValue)) {
-        setValidationError('Invalid Email Address');
+        setValidationError('这不是个有效邮箱');
         return;
       }
       // Add as user with email
@@ -334,11 +362,16 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
       };
       setInviteTags(prev => [...prev, newTag]);
     } else {
-      // Add as user name
+      // Not an email -> must be valid role group name
+      if (!isValidRoleGroupName(trimmedValue)) {
+        setValidationError('这不是个有效邮箱');
+        return;
+      }
+      const matchedGroup = [...roleGroups, ...suggestedGroups].find(g => g.name.toLowerCase() === trimmedValue.toLowerCase());
       const newTag = {
-        id: `user-${Date.now()}`,
-        name: trimmedValue,
-        type: 'user' as const
+        id: matchedGroup?.id || `group-${Date.now()}`,
+        name: matchedGroup?.name || trimmedValue,
+        type: 'group' as const
       };
       setInviteTags(prev => [...prev, newTag]);
     }
@@ -568,7 +601,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                         onChange={(e) => {
                           setInputValue(e.target.value);
                           setSearchQuery(e.target.value);
-                          setValidationError('');
+                          validateInviteInput(e.target.value);
                         }}
                         onKeyDown={handleInputKeyDown}
                         className="w-full py-1 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none text-sm"
@@ -608,6 +641,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                           addSuggestedToTags(result);
                           setSearchQuery('');
                           setInputValue('');
+                          setValidationError('');
                           setShowSearchResults(false);
                         }}
                       >
