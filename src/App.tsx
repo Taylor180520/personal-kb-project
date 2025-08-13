@@ -10,6 +10,8 @@ import AddSourcesModal from './components/AddSourcesModal';
 import ChatInterface from './components/ChatInterface';
 import TopNotification from './components/TopNotification';
 import MyTeamsTab from './components/MyTeamsTab';
+// Feature flag: hide "My Teams" in routes without deleting code
+const SHOW_MY_TEAMS = false;
 import SharePermissionModal from './components/SharePermissionModal';
 
 interface KnowledgeBase {
@@ -249,16 +251,18 @@ function App() {
                 >
                   Knowledge Books
                 </button>
-                <button
-                  onClick={() => setActiveMainTab('myTeams')}
-                  className={`px-4 py-2 font-medium transition-colors ${
-                    activeMainTab === 'myTeams'
-                      ? 'text-purple-600 dark:text-purple-400 border-b-2 border-purple-600'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                  }`}
-                >
-                  My Teams
-                </button>
+                {SHOW_MY_TEAMS && (
+                  <button
+                    onClick={() => setActiveMainTab('myTeams')}
+                    className={`px-4 py-2 font-medium transition-colors ${
+                      activeMainTab === 'myTeams'
+                        ? 'text-purple-600 dark:text-purple-400 border-b-2 border-purple-600'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                    }`}
+                  >
+                    My Teams
+                  </button>
+                )}
               </div>
               {activeMainTab === 'knowledgeBooks' && (
                 <button
@@ -274,7 +278,7 @@ function App() {
         </div>
 
         {/* Content based on active tab */}
-        {activeMainTab === 'knowledgeBooks' ? (
+        {activeMainTab === 'knowledgeBooks' || !SHOW_MY_TEAMS ? (
           <>
             {/* Knowledge Base Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
