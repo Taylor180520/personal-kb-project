@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MoreHorizontal, Edit, Trash2, Users, Megaphone } from 'lucide-react';
+import Tooltip from './Tooltip';
 
 interface KnowledgeBaseCardProps {
   id: string;
@@ -63,6 +64,20 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
     onPermissions?.(id);
   };
 
+  const isSystem = roleTags.some(tag => tag.toLowerCase() === 'system');
+
+  // Deterministic pseudo-random selection per id so UI doesn't flicker
+  const hashString = (s: string) => {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) {
+      h = (h * 31 + s.charCodeAt(i)) | 0;
+    }
+    return Math.abs(h);
+  };
+  const hash = hashString(id);
+  const showYouShare = !isSystem && hash % 4 === 0;      // ~25% cards
+  const showOthersShare = !isSystem && hash % 4 === 1;   // ~25% cards
+
   return (
     <div 
       className="bg-white dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 hover:border-purple-600 transition-all duration-200 cursor-pointer relative group shadow-sm dark:shadow-none"
@@ -71,8 +86,18 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
       <div className="flex justify-between items-start mb-4">
         <div className="text-2xl">{emoji}</div>
         <div className="flex items-center gap-2">
-          {roleTags.some(tag => tag.toLowerCase() === 'system') && (
+          {isSystem && (
             <Megaphone size={18} className="text-purple-600 dark:text-purple-400" />
+          )}
+          {!isSystem && showYouShare && (
+            <Tooltip text="You share this folder to others." position="left">
+              <span className="text-base" aria-label="you-share" role="img">👤</span>
+            </Tooltip>
+          )}
+          {!isSystem && showOthersShare && (
+            <Tooltip text="Others share this folder with you." position="left">
+              <span className="text-base" aria-label="others-share" role="img">👥</span>
+            </Tooltip>
           )}
           {isCentral ? (
             <div className="relative" ref={dropdownRef}>
