@@ -42,6 +42,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const inviteInputRef = useRef<HTMLInputElement>(null);
   const permissionSelectorRef = useRef<HTMLDivElement>(null);
+  const [inviteSuccess, setInviteSuccess] = useState(false);
 
   // Mock data - 在实际项目中这将从API获取
   const [users, setUsers] = useState<User[]>([
@@ -429,6 +430,9 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
     setInputValue('');
     setValidationError('');
     setIsInviteMode(false);
+    // success feedback
+    setInviteSuccess(true);
+    setTimeout(() => setInviteSuccess(false), 2000);
     
     // Here you would also send email notifications
     console.log('Sending email notifications to:', inviteTags);
@@ -482,6 +486,15 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
             <X size={24} />
           </button>
         </div>
+
+        {/* Success notice */}
+        {inviteSuccess && (
+          <div className="px-6 pt-3">
+            <div className="text-sm px-3 py-2 rounded border bg-green-50 border-green-200 text-green-700 dark:bg-green-900/20 dark:border-green-800 dark:text-green-300">
+              Invitation sent
+            </div>
+          </div>
+        )}
 
         {/* Search and Invite */}
         {!isInviteMode && (
