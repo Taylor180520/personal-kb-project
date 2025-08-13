@@ -78,13 +78,16 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
   const showYouShare = !isSystem && hash % 4 === 0;      // ~25% cards
   const showOthersShare = !isSystem && hash % 4 === 1;   // ~25% cards
 
+  // Avoid using 👥 as the folder/logo emoji to prevent confusion with the bottom-right share indicator
+  const displayedEmoji = emoji === '👥' ? '📁' : emoji;
+
   return (
     <div 
       className="bg-white dark:bg-gray-800/50 rounded-xl p-4 pb-8 border border-gray-200 dark:border-gray-700 hover:border-purple-600 transition-all duration-200 cursor-pointer relative group shadow-sm dark:shadow-none"
       onClick={onClick}
     >
       <div className="flex justify-between items-start mb-4">
-        <div className="text-2xl">{emoji}</div>
+        <div className="text-2xl">{displayedEmoji}</div>
         <div className="flex items-center gap-2">
           {isCentral ? (
             <div className="relative" ref={dropdownRef}>
