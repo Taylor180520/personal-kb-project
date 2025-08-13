@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MoreHorizontal, Edit, Trash2, Users, Megaphone } from 'lucide-react';
+import { MoreHorizontal, Edit, Trash2, Users } from 'lucide-react';
 import Tooltip from './Tooltip';
 
 interface KnowledgeBaseCardProps {
@@ -80,25 +80,12 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
 
   return (
     <div 
-      className="bg-white dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 hover:border-purple-600 transition-all duration-200 cursor-pointer relative group shadow-sm dark:shadow-none"
+      className="bg-white dark:bg-gray-800/50 rounded-xl p-4 pb-8 border border-gray-200 dark:border-gray-700 hover:border-purple-600 transition-all duration-200 cursor-pointer relative group shadow-sm dark:shadow-none"
       onClick={onClick}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="text-2xl">{emoji}</div>
         <div className="flex items-center gap-2">
-          {isSystem && (
-            <Megaphone size={18} className="text-purple-600 dark:text-purple-400" />
-          )}
-          {!isSystem && showYouShare && (
-            <Tooltip text="You share this folder to others." position="left">
-              <span className="text-base" aria-label="you-share" role="img">👤</span>
-            </Tooltip>
-          )}
-          {!isSystem && showOthersShare && (
-            <Tooltip text="Others share this folder with you." position="left">
-              <span className="text-base" aria-label="others-share" role="img">👥</span>
-            </Tooltip>
-          )}
           {isCentral ? (
             <div className="relative" ref={dropdownRef}>
               <button 
@@ -142,6 +129,23 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
       </div>
       
       <h3 className="text-gray-900 dark:text-white font-medium text-lg mb-2">{title}</h3>
+
+      {/* Bottom-right icons: system 📢 or share indicators 👤 / 👥 */}
+      <div className="absolute right-3 bottom-3 flex items-center gap-2">
+        {isSystem && (
+          <span className="text-base" aria-label="system" role="img">📢</span>
+        )}
+        {!isSystem && showYouShare && (
+          <Tooltip text="You share this folder to others." position="top">
+            <span className="text-base" aria-label="you-share" role="img">👤</span>
+          </Tooltip>
+        )}
+        {!isSystem && showOthersShare && (
+          <Tooltip text="Others share this folder with you." position="top">
+            <span className="text-base" aria-label="others-share" role="img">👥</span>
+          </Tooltip>
+        )}
+      </div>
 
     </div>
   );
