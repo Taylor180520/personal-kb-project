@@ -136,7 +136,9 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
       {/* Bottom-right icons: system 📢 or share indicators 👤 / 👥 */}
       <div className="absolute right-3 bottom-3 flex items-center gap-2">
         {isSystem && (
-          <span className="text-base" aria-label="system" role="img">📢</span>
+          <Tooltip text="Marketplace share this folder with you" position="top">
+            <span className="text-base" aria-label="system" role="img">📢</span>
+          </Tooltip>
         )}
         {!isSystem && showYouShare && (
           <Tooltip text="You share this folder to others." position="top">
