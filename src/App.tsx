@@ -32,6 +32,7 @@ function App() {
   const [isAddSourcesModalOpen, setIsAddSourcesModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [showUploadNotification, setShowUploadNotification] = useState(false);
+  const [showInviteNotification, setShowInviteNotification] = useState(false);
   const [currentPage, setCurrentPage] = useState<'home' | 'chat' | 'upload'>('home');
   const [currentKB, setCurrentKB] = useState<KnowledgeBase | null>(null);
   const [editingKB, setEditingKB] = useState<KnowledgeBase | null>(null);
@@ -117,6 +118,10 @@ function App() {
     }
   };
 
+  const handleInviteSuccessTopNotice = () => {
+    setShowInviteNotification(true);
+  };
+
   const handleEditSubmit = (name: string, emoji: string) => {
     if (editingKB) {
       setKnowledgeBases(prev => 
@@ -166,6 +171,11 @@ function App() {
           message="Upload received"
           isVisible={showUploadNotification}
           onHide={() => setShowUploadNotification(false)}
+        />
+        <TopNotification
+          message="Invitation sent"
+          isVisible={showInviteNotification}
+          onHide={() => setShowInviteNotification(false)}
         />
       </>
     );
@@ -359,6 +369,7 @@ function App() {
           setSharingKB(null);
         }}
         knowledgeBaseName={sharingKB?.title || ''}
+        onInviteSuccess={handleInviteSuccessTopNotice}
       />
 
       {/* Top Notification */}
