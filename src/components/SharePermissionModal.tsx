@@ -229,6 +229,46 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
       avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face',
       permission: 'View-only',
       addedAt: new Date()
+    },
+    {
+      id: 'suggest-3',
+      name: 'Michael Brown',
+      email: 'michael.brown@company.com',
+      avatar: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=32&h=32&fit=crop&crop=face',
+      permission: 'View-only',
+      addedAt: new Date()
+    },
+    {
+      id: 'suggest-4',
+      name: 'Olivia Harris',
+      email: 'olivia.harris@company.com',
+      avatar: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=32&h=32&fit=crop&crop=face',
+      permission: 'View-only',
+      addedAt: new Date()
+    },
+    {
+      id: 'suggest-5',
+      name: 'James Anderson',
+      email: 'james.anderson@company.com',
+      avatar: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=32&h=32&fit=crop&crop=face',
+      permission: 'View-only',
+      addedAt: new Date()
+    },
+    {
+      id: 'suggest-6',
+      name: 'Emma Thompson',
+      email: 'emma.thompson@company.com',
+      avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=32&h=32&fit=crop&crop=face',
+      permission: 'View-only',
+      addedAt: new Date()
+    },
+    {
+      id: 'suggest-7',
+      name: 'Daniel Martinez',
+      email: 'daniel.martinez@company.com',
+      avatar: 'https://images.unsplash.com/photo-1541534401786-2077c8d48616?w=32&h=32&fit=crop&crop=face',
+      permission: 'View-only',
+      addedAt: new Date()
     }
   ]);
 
@@ -237,6 +277,46 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
       id: 'suggest-group-1',
       name: 'Design Team',
       memberCount: 6,
+      permission: 'View-only',
+      addedAt: new Date(),
+      members: []
+    },
+    {
+      id: 'suggest-group-2',
+      name: 'Product Team',
+      memberCount: 10,
+      permission: 'View-only',
+      addedAt: new Date(),
+      members: []
+    },
+    {
+      id: 'suggest-group-3',
+      name: 'QA Team',
+      memberCount: 7,
+      permission: 'View-only',
+      addedAt: new Date(),
+      members: []
+    },
+    {
+      id: 'suggest-group-4',
+      name: 'Sales Team',
+      memberCount: 15,
+      permission: 'View-only',
+      addedAt: new Date(),
+      members: []
+    },
+    {
+      id: 'suggest-group-5',
+      name: 'Marketing Ops',
+      memberCount: 9,
+      permission: 'View-only',
+      addedAt: new Date(),
+      members: []
+    },
+    {
+      id: 'suggest-group-6',
+      name: 'Customer Support',
+      memberCount: 12,
       permission: 'View-only',
       addedAt: new Date(),
       members: []
