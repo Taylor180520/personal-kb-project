@@ -21,8 +21,8 @@ const TopNotification: React.FC<TopNotificationProps> = ({ message, isVisible, o
 
   return (
     <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] animate-slide-down pointer-events-none">
-      <div className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 shadow-lg">
-        <p className="text-green-400 text-sm font-medium">{message}</p>
+      <div className="pointer-events-auto bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 shadow-lg flex items-center gap-2 border-l-4 border-l-green-500">
+        <p className="text-green-700 dark:text-green-300 text-sm font-medium">{message}</p>
       </div>
     </div>
   );
