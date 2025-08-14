@@ -865,13 +865,12 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                       <div className="text-xs text-gray-500 dark:text-gray-400">taylor.zhang@item.com</div>
                     </div>
                   </div>
-                  <select
-                    disabled
-                    className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                    value="Owner"
+                  <div
+                    className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed text-left"
+                    aria-label="Owner (fixed)"
                   >
-                    <option>Owner</option>
-                  </select>
+                    Owner
+                  </div>
                 </div>
                 {/* Existing users with editable permissions */}
                 {sortedUsers.length > 0 && (
