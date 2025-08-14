@@ -31,7 +31,8 @@ interface SharePermissionModalProps {
 const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
   isOpen,
   onClose,
-  knowledgeBaseName
+  knowledgeBaseName,
+  onInviteSuccess
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
