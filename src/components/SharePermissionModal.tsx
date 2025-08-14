@@ -866,7 +866,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                     </div>
                   </div>
                   <div
-                    className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed text-left"
+                    className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed text-left min-w-[120px]"
                     aria-label="Owner (fixed)"
                   >
                     Owner
@@ -884,10 +884,10 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                           <div className="text-xs text-gray-500 dark:text-gray-400">{user.email}</div>
                         </div>
                       </div>
-                      <select
+                         <select
                         value={user.permission}
                         onChange={(e) => handlePermissionChange(user.id, e.target.value as User['permission'])}
-                        className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-purple-600 focus:outline-none"
+                           className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-purple-600 focus:outline-none min-w-[120px] text-left"
                       >
                         <option value="View-only">View-only</option>
                         <option value="Can edit">Can edit</option>
