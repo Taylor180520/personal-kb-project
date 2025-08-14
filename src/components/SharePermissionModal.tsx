@@ -851,10 +851,31 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
             // Share Mode Content
             <div className="p-6 space-y-4">
             {/* Users Section */}
-            {sortedUsers.length > 0 && (
-              <div>
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Users</h3>
-                <div className="space-y-3">
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Users</h3>
+              <div className="space-y-3">
+                {/* Current owner (You) - fixed, not editable */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      T
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">Taylor Zhang (You)</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">taylor.zhang@item.com</div>
+                    </div>
+                  </div>
+                  <select
+                    disabled
+                    className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                    value="Owner"
+                  >
+                    <option>Owner</option>
+                  </select>
+                </div>
+                {/* Existing users with editable permissions */}
+                {sortedUsers.length > 0 && (
+                  <>
                   {sortedUsers.map((user) => (
                     <div key={user.id} className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -876,9 +897,10 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                       </select>
                     </div>
                   ))}
-                </div>
+                  </>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Role Groups Section */}
             {sortedRoleGroups.length > 0 && (
