@@ -208,6 +208,11 @@ function App() {
           isVisible={showUploadNotification}
           onHide={() => setShowUploadNotification(false)}
         />
+        <TopNotification
+          message="Invitation sent"
+          isVisible={showInviteNotification}
+          onHide={() => setShowInviteNotification(false)}
+        />
       </>
     );
   }
@@ -377,6 +382,11 @@ function App() {
         message="Upload received"
         isVisible={showUploadNotification}
         onHide={() => setShowUploadNotification(false)}
+      />
+      <TopNotification
+        message="Invitation sent"
+        isVisible={showInviteNotification}
+        onHide={() => setShowInviteNotification(false)}
       />
     </div>
   );

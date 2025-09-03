@@ -31,7 +31,8 @@ interface SharePermissionModalProps {
 const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
   isOpen,
   onClose,
-  knowledgeBaseName
+  knowledgeBaseName,
+  onInviteSuccess
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
@@ -228,6 +229,46 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
       avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=32&h=32&fit=crop&crop=face',
       permission: 'View-only',
       addedAt: new Date()
+    },
+    {
+      id: 'suggest-3',
+      name: 'Michael Brown',
+      email: 'michael.brown@company.com',
+      avatar: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=32&h=32&fit=crop&crop=face',
+      permission: 'View-only',
+      addedAt: new Date()
+    },
+    {
+      id: 'suggest-4',
+      name: 'Olivia Harris',
+      email: 'olivia.harris@company.com',
+      avatar: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=32&h=32&fit=crop&crop=face',
+      permission: 'View-only',
+      addedAt: new Date()
+    },
+    {
+      id: 'suggest-5',
+      name: 'James Anderson',
+      email: 'james.anderson@company.com',
+      avatar: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=32&h=32&fit=crop&crop=face',
+      permission: 'View-only',
+      addedAt: new Date()
+    },
+    {
+      id: 'suggest-6',
+      name: 'Emma Thompson',
+      email: 'emma.thompson@company.com',
+      avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=32&h=32&fit=crop&crop=face',
+      permission: 'View-only',
+      addedAt: new Date()
+    },
+    {
+      id: 'suggest-7',
+      name: 'Daniel Martinez',
+      email: 'daniel.martinez@company.com',
+      avatar: 'https://images.unsplash.com/photo-1541534401786-2077c8d48616?w=32&h=32&fit=crop&crop=face',
+      permission: 'View-only',
+      addedAt: new Date()
     }
   ]);
 
@@ -236,6 +277,46 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
       id: 'suggest-group-1',
       name: 'Design Team',
       memberCount: 6,
+      permission: 'View-only',
+      addedAt: new Date(),
+      members: []
+    },
+    {
+      id: 'suggest-group-2',
+      name: 'Product Team',
+      memberCount: 10,
+      permission: 'View-only',
+      addedAt: new Date(),
+      members: []
+    },
+    {
+      id: 'suggest-group-3',
+      name: 'QA Team',
+      memberCount: 7,
+      permission: 'View-only',
+      addedAt: new Date(),
+      members: []
+    },
+    {
+      id: 'suggest-group-4',
+      name: 'Sales Team',
+      memberCount: 15,
+      permission: 'View-only',
+      addedAt: new Date(),
+      members: []
+    },
+    {
+      id: 'suggest-group-5',
+      name: 'Marketing Ops',
+      memberCount: 9,
+      permission: 'View-only',
+      addedAt: new Date(),
+      members: []
+    },
+    {
+      id: 'suggest-group-6',
+      name: 'Customer Support',
+      memberCount: 12,
       permission: 'View-only',
       addedAt: new Date(),
       members: []
@@ -770,10 +851,35 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
             // Share Mode Content
             <div className="p-6 space-y-4">
             {/* Users Section */}
-            {sortedUsers.length > 0 && (
-              <div>
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Users</h3>
-                <div className="space-y-3">
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Users</h3>
+              <div className="space-y-3">
+                {/* Current owner (You) - fixed, not editable */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      T
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">Taylor Zhang (You)</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">taylor.zhang@item.com</div>
+                    </div>
+                  </div>
+                  <div className="relative w-[140px]" aria-label="Owner (fixed)">
+                    <select
+                      disabled
+                      className="appearance-none w-full text-xs px-2 py-1 pr-6 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                      value="Owner"
+                      onChange={() => {}}
+                    >
+                      <option>Owner</option>
+                    </select>
+                    <ChevronDownIcon size={14} className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+                {/* Existing users with editable permissions */}
+                {sortedUsers.length > 0 && (
+                  <>
                   {sortedUsers.map((user) => (
                     <div key={user.id} className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -783,10 +889,10 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                           <div className="text-xs text-gray-500 dark:text-gray-400">{user.email}</div>
                         </div>
                       </div>
-                      <select
+                         <select
                         value={user.permission}
                         onChange={(e) => handlePermissionChange(user.id, e.target.value as User['permission'])}
-                        className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-purple-600 focus:outline-none"
+                           className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-purple-600 focus:outline-none text-left w-[140px]"
                       >
                         <option value="View-only">View-only</option>
                         <option value="Can edit">Can edit</option>
@@ -795,9 +901,10 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                       </select>
                     </div>
                   ))}
-                </div>
+                  </>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Role Groups Section */}
             {sortedRoleGroups.length > 0 && (
@@ -831,7 +938,7 @@ const SharePermissionModal: React.FC<SharePermissionModalProps> = ({
                         <select
                           value={group.permission}
                           onChange={(e) => handleGroupPermissionChange(group.id, e.target.value as RoleGroup['permission'])}
-                          className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-purple-600 focus:outline-none"
+                          className="text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-purple-600 focus:outline-none w-[140px]"
                         >
                           <option value="View-only">View-only</option>
                           <option value="Can edit">Can edit</option>
