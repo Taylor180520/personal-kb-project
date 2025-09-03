@@ -86,10 +86,11 @@ html {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-/* Focus styles - remove outer focus ring */
+/* Focus styles */
 input:focus, textarea:focus, select:focus {
   outline: none;
-  box-shadow: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
 /* Custom button styles */

@@ -10,9 +10,6 @@ import AddSourcesModal from './components/AddSourcesModal';
 import ChatInterface from './components/ChatInterface';
 import TopNotification from './components/TopNotification';
 import MyTeamsTab from './components/MyTeamsTab';
-// Feature flag: hide "My Teams" in routes without deleting code
-const SHOW_MY_TEAMS = false;
-import SharePermissionModal from './components/SharePermissionModal';
 
 interface KnowledgeBase {
   id: string;
@@ -30,14 +27,11 @@ function App() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAddSourcesModalOpen, setIsAddSourcesModalOpen] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [showUploadNotification, setShowUploadNotification] = useState(false);
-  const [showInviteNotification, setShowInviteNotification] = useState(false);
   const [currentPage, setCurrentPage] = useState<'home' | 'chat' | 'upload'>('home');
   const [currentKB, setCurrentKB] = useState<KnowledgeBase | null>(null);
   const [editingKB, setEditingKB] = useState<KnowledgeBase | null>(null);
   const [deletingKB, setDeletingKB] = useState<KnowledgeBase | null>(null);
-  const [sharingKB, setSharingKB] = useState<KnowledgeBase | null>(null);
   const [currentKBName, setCurrentKBName] = useState('');
   const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([
     { id: '0', title: 'Getting Started with Your KB', emoji: '🎯', status: 'Public', isCentral: false, roleTags: ['system'] },
@@ -110,18 +104,6 @@ function App() {
     }
   };
 
-  const handlePermissionsKB = (id: string) => {
-    const kb = knowledgeBases.find(kb => kb.id === id);
-    if (kb) {
-      setSharingKB(kb);
-      setIsShareModalOpen(true);
-    }
-  };
-
-  const handleInviteSuccessTopNotice = () => {
-    setShowInviteNotification(true);
-  };
-
   const handleEditSubmit = (name: string, emoji: string) => {
     if (editingKB) {
       setKnowledgeBases(prev => 
@@ -172,11 +154,6 @@ function App() {
           isVisible={showUploadNotification}
           onHide={() => setShowUploadNotification(false)}
         />
-        <TopNotification
-          message="Invitation sent"
-          isVisible={showInviteNotification}
-          onHide={() => setShowInviteNotification(false)}
-        />
       </>
     );
   }
@@ -207,11 +184,6 @@ function App() {
           message="Upload received"
           isVisible={showUploadNotification}
           onHide={() => setShowUploadNotification(false)}
-        />
-        <TopNotification
-          message="Invitation sent"
-          isVisible={showInviteNotification}
-          onHide={() => setShowInviteNotification(false)}
         />
       </>
     );
@@ -266,18 +238,16 @@ function App() {
                 >
                   Knowledge Books
                 </button>
-                {SHOW_MY_TEAMS && (
-                  <button
-                    onClick={() => setActiveMainTab('myTeams')}
-                    className={`px-4 py-2 font-medium transition-colors ${
-                      activeMainTab === 'myTeams'
-                        ? 'text-purple-600 dark:text-purple-400 border-b-2 border-purple-600'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                    }`}
-                  >
-                    My Teams
-                  </button>
-                )}
+                <button
+                  onClick={() => setActiveMainTab('myTeams')}
+                  className={`px-4 py-2 font-medium transition-colors ${
+                    activeMainTab === 'myTeams'
+                      ? 'text-purple-600 dark:text-purple-400 border-b-2 border-purple-600'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  }`}
+                >
+                  My Teams
+                </button>
               </div>
               {activeMainTab === 'knowledgeBooks' && (
                 <button
@@ -293,7 +263,7 @@ function App() {
         </div>
 
         {/* Content based on active tab */}
-        {activeMainTab === 'knowledgeBooks' || !SHOW_MY_TEAMS ? (
+        {activeMainTab === 'knowledgeBooks' ? (
           <>
             {/* Knowledge Base Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
@@ -309,7 +279,6 @@ function App() {
                   onClick={() => handleKBClick(kb)}
                   onEdit={handleEditKB}
                   onDelete={handleDeleteKB}
-                  onPermissions={handlePermissionsKB}
                 />
               ))}
             </div>
@@ -366,27 +335,11 @@ function App() {
         onConfirm={handleUploadConfirm}
       />
 
-      {/* Share Permission Modal */}
-      <SharePermissionModal
-        isOpen={isShareModalOpen}
-        onClose={() => {
-          setIsShareModalOpen(false);
-          setSharingKB(null);
-        }}
-        knowledgeBaseName={sharingKB?.title || ''}
-        onInviteSuccess={handleInviteSuccessTopNotice}
-      />
-
       {/* Top Notification */}
       <TopNotification
         message="Upload received"
         isVisible={showUploadNotification}
         onHide={() => setShowUploadNotification(false)}
-      />
-      <TopNotification
-        message="Invitation sent"
-        isVisible={showInviteNotification}
-        onHide={() => setShowInviteNotification(false)}
       />
     </div>
   );

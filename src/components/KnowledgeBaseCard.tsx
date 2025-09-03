@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MoreHorizontal, Edit, Trash2, Users } from 'lucide-react';
-import Tooltip from './Tooltip';
+import { MoreHorizontal, Edit, Trash2 } from 'lucide-react';
 
 interface KnowledgeBaseCardProps {
   id: string;
@@ -12,7 +11,6 @@ interface KnowledgeBaseCardProps {
   onClick?: () => void;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
-  onPermissions?: (id: string) => void;
 }
 
 const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
@@ -24,8 +22,7 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
   roleTags = [],
   onClick,
   onEdit,
-  onDelete,
-  onPermissions
+  onDelete
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -58,100 +55,75 @@ const KnowledgeBaseCard: React.FC<KnowledgeBaseCardProps> = ({
     onDelete?.(id);
   };
 
-  const handlePermissions = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowDropdown(false);
-    onPermissions?.(id);
-  };
-
-  const isSystem = roleTags.some(tag => tag.toLowerCase() === 'system');
-
-  // Deterministic pseudo-random selection per id so UI doesn't flicker
-  const hashString = (s: string) => {
-    let h = 0;
-    for (let i = 0; i < s.length; i++) {
-      h = (h * 31 + s.charCodeAt(i)) | 0;
-    }
-    return Math.abs(h);
-  };
-  const hash = hashString(id);
-  const showYouShare = !isSystem && hash % 4 === 0;      // ~25% cards
-  const showOthersShare = !isSystem && hash % 4 === 1;   // ~25% cards
-
-  // Avoid using 👥 as the folder/logo emoji to prevent confusion with the bottom-right share indicator
-  const displayedEmoji = emoji === '👥' ? '📁' : emoji;
-
   return (
     <div 
-      className="bg-white dark:bg-gray-800/50 rounded-xl p-4 pb-8 border border-gray-200 dark:border-gray-700 hover:border-purple-600 transition-all duration-200 cursor-pointer relative group shadow-sm dark:shadow-none"
+      className="bg-white dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 hover:border-purple-600 transition-all duration-200 cursor-pointer relative group shadow-sm dark:shadow-none"
       onClick={onClick}
     >
       <div className="flex justify-between items-start mb-4">
-        <div className="text-2xl">{displayedEmoji}</div>
-        <div className="flex items-center gap-2">
-          {isCentral ? (
-            <div className="relative" ref={dropdownRef}>
-              <button 
-                onClick={handleMoreClick}
-                className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white"
-              >
-                <MoreHorizontal size={20} />
-              </button>
-              {showDropdown && (
-                <div className="absolute right-0 top-8 w-36 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-10">
-                  <button
-                    onClick={handlePermissions}
-                    className="w-full px-3 py-2 text-left text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 rounded-t-lg transition-colors"
-                  >
-                    <Users size={14} />
-                    Permissions
-                  </button>
-                  <button
-                    onClick={handleEdit}
-                    className="w-full px-3 py-2 text-left text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 transition-colors"
-                  >
-                    <Edit size={14} />
-                    Edit
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    className="w-full px-3 py-2 text-left text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 rounded-b-lg transition-colors"
-                  >
-                    <Trash2 size={14} />
-                    Delete
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <button className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-white">
+        <div className="text-2xl">{emoji}</div>
+        {isCentral && (
+          <div className="relative" ref={dropdownRef}>
+            <button 
+              onClick={handleMoreClick}
+              className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 dark:text-gray-400 hover:text-gray-600 dark:hover:text-white"
+            >
               <MoreHorizontal size={20} />
             </button>
-          )}
-        </div>
+            
+            {showDropdown && (
+              <div className="absolute right-0 top-8 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-10">
+                <button
+                  onClick={handleEdit}
+                  className="w-full px-3 py-2 text-left text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 rounded-t-lg transition-colors"
+                >
+                  <Edit size={14} />
+                  Edit
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="w-full px-3 py-2 text-left text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 rounded-b-lg transition-colors"
+                >
+                  <Trash2 size={14} />
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+        {!isCentral && (
+          <button className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-white">
+            <MoreHorizontal size={20} />
+          </button>
+        )}
       </div>
       
       <h3 className="text-gray-900 dark:text-white font-medium text-lg mb-2">{title}</h3>
-
-      {/* Bottom-right icons: system 📢 or share indicators 👤 / 👥 */}
-      <div className="absolute right-3 bottom-3 flex items-center gap-2">
-        {isSystem && (
-          <Tooltip text="Marketplace share this folder with you" position="top">
-            <span className="text-base" aria-label="system" role="img">📢</span>
-          </Tooltip>
-        )}
-        {!isSystem && showYouShare && (
-          <Tooltip text="You share this folder to others." position="top">
-            <span className="text-base" aria-label="you-share" role="img">👤</span>
-          </Tooltip>
-        )}
-        {!isSystem && showOthersShare && (
-          <Tooltip text="Others share this folder with you." position="top">
-            <span className="text-base" aria-label="others-share" role="img">👥</span>
-          </Tooltip>
+      
+      {/* Role Tags - Replace status indicators */}
+      <div className="flex items-center justify-start">
+        {roleTags.length > 0 ? (
+          <div className="flex flex-wrap gap-1">
+            {roleTags.map((tag, index) => (
+              <span
+                key={index}
+                className={`px-2 py-1 text-xs rounded font-medium border ${
+                  tag === 'system' 
+                    ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700/30' 
+                    : 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-700/30'
+                }`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+            <span className="text-gray-500 dark:text-gray-500 text-xs">Private</span>
+          </div>
         )}
       </div>
-
     </div>
   );
 };
